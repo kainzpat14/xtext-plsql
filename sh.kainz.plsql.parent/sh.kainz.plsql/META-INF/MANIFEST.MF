@@ -25,5 +25,6 @@ Export-Package: sh.kainz.plsql.plsql.util,
  sh.kainz.plsql.services,
  sh.kainz.plsql.plsql.impl,
  sh.kainz.plsql.parser.antlr.internal,
- sh.kainz.plsql.serializer
+ sh.kainz.plsql.serializer,
+ sh.kainz.plsql.parser.antlr.lexer
 Import-Package: org.apache.log4j

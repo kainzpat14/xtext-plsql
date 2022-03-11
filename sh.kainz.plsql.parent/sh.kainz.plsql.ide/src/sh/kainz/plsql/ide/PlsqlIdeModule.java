@@ -3,9 +3,25 @@
  */
 package sh.kainz.plsql.ide;
 
+import org.eclipse.xtext.ide.LexerIdeBindings;
+import org.eclipse.xtext.ide.editor.contentassist.antlr.internal.Lexer;
+
+import com.google.inject.Binder;
+import com.google.inject.name.Names;
+
+import sh.kainz.plsql.ide.contentassist.antlr.lexer.InternalPlsqlLexer;
+import sh.kainz.plsql.ide.contentassist.antlr.lexer.PlsqlLexer;
 
 /**
  * Use this class to register ide components.
  */
 public class PlsqlIdeModule extends AbstractPlsqlIdeModule {
+
+	@Override
+	public void configureContentAssistLexer(Binder binder) {
+		binder.bind(Lexer.class)
+		.annotatedWith(Names.named(LexerIdeBindings.CONTENT_ASSIST))
+		.to(PlsqlLexer.class);
+	}
+	
 }

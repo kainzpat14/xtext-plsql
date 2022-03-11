@@ -36,7 +36,13 @@ Workflow {
 		language = StandardLanguage {
 			name = "sh.kainz.plsql.Plsql"
 			fileExtensions = "kainzplsql"
-
+			
+			parserGenerator = {
+				options = {
+					ignoreCase = true
+				}
+			}
+			
 			serializer = {
 				generateStub = false
 			}

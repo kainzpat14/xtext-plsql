@@ -3,9 +3,23 @@
  */
 package sh.kainz.plsql;
 
+import org.eclipse.xtext.conversion.IValueConverterService;
+import org.eclipse.xtext.conversion.impl.DefaultTerminalConverter;
 import org.eclipse.xtext.linking.ILinker;
+import org.eclipse.xtext.naming.IQualifiedNameConverter;
+import org.eclipse.xtext.naming.IQualifiedNameProvider;
+import org.eclipse.xtext.parser.antlr.Lexer;
+import org.eclipse.xtext.parser.antlr.LexerBindings;
+import org.eclipse.xtext.parser.antlr.LexerProvider;
 
+import com.google.inject.Binder;
+import com.google.inject.Provider;
+import com.google.inject.name.Names;
+
+import sh.kainz.plsql.conversion.PlsqlValueConverterService;
 import sh.kainz.plsql.linking.CustomDelegateLinker;
+import sh.kainz.plsql.parser.antlr.lexer.InternalPlsqlLexer;
+import sh.kainz.plsql.parser.antlr.lexer.PlsqlLexer;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -16,6 +30,34 @@ public class PlsqlRuntimeModule extends AbstractPlsqlRuntimeModule {
 	public Class<? extends ILinker> bindILinker() {
 		return CustomDelegateLinker.class;
 	}
+
+	@Override
+	public Class<? extends Lexer> bindLexer() {
+		return PlsqlLexer.class;
+	}
+
+	@Override
+	public Provider<? extends InternalPlsqlLexer> provideInternalPlsqlLexer() {
+		return LexerProvider.create(PlsqlLexer.class);
+	}
+
+	@Override
+	public void configureRuntimeLexer(Binder binder) {
+		binder.bind(Lexer.class)
+		.annotatedWith(Names.named(LexerBindings.RUNTIME))
+		.to(PlsqlLexer.class);
+	}
+
+	@Override
+	public Class<? extends IValueConverterService> bindIValueConverterService() {
+		return PlsqlValueConverterService.class;
+	}
+	
+	
+
+	
+	
+	
 	
 	
 }

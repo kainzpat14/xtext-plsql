@@ -46,7 +46,9 @@ Select:
 	'FROM' table=[Table]
 ;
 
-terminal ID: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+terminal ID: CASE_SENSITIVE_ID | CASE_INSENSITIVE_ID;
+terminal CASE_INSENSITIVE_ID: '^'?('a'..'z'|'A'..'Z'|'_') ('a'..'z'|'A'..'Z'|'_'|'0'..'9')*;
+terminal CASE_SENSITIVE_ID: '"' !'"'* '"';
 terminal INT returns ecore::EInt: ('0'..'9')+;
 terminal STRING:
 			"'" ( '\\' . /* 'b'|'t'|'n'|'f'|'r'|'u'|'"'|"'"|'\\' */ | !('\\'|"'") | "''" )* "'"
