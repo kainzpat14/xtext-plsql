@@ -1,20 +1,15 @@
 package sh.kainz.plsql.naming;
 
-import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.xtext.naming.DefaultDeclarativeQualifiedNameProvider;
-import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.util.SimpleAttributeResolver;
 
 import com.google.common.base.Function;
 
-import sh.kainz.plsql.plsql.SelectColumn;
 import sh.kainz.plsql.plsql.impl.ColumnExpressionImpl;
-import sh.kainz.plsql.plsql.impl.SelectExpressionImpl;
 
 public class PlsqlQualifiedNameProvider extends DefaultDeclarativeQualifiedNameProvider {
 

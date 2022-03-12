@@ -21,11 +21,11 @@ Table:
 
 AlterTable: 
 	'ALTER' 'TABLE' table=[Table] '('
-		columns+= Column+
+		columns+= TableColumn+
 	')'
 ;
 
-Column:
+TableColumn:
 	name=ID type=SqlType
 ;
 
@@ -43,8 +43,21 @@ NumberType:
 
 Select: 
 	'SELECT' columns+=SelectColumn+
-	'FROM' table=[Table]
+	'FROM' source=SelectSource
 ;
+
+SelectSource:
+	TableReference | Subselect
+;
+
+TableReference: 
+	table=[Table]
+;
+
+Subselect:
+	'(' Select ')'
+;
+
 SelectColumn:
 	SelectExpression ('AS' name=ID)?
 ;
@@ -55,6 +68,10 @@ SelectExpression:
 
 ColumnExpression:
 	column=[Column]
+;
+
+Column:
+	SelectColumn | TableColumn
 ;
 
 StringExpression:

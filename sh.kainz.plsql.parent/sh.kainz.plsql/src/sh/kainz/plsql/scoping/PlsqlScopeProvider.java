@@ -9,6 +9,8 @@ import org.eclipse.xtext.scoping.IScope;
 import sh.kainz.plsql.plsql.PlsqlPackage;
 import sh.kainz.plsql.plsql.Select;
 import sh.kainz.plsql.plsql.SelectColumn;
+import sh.kainz.plsql.plsql.Subselect;
+import sh.kainz.plsql.plsql.TableReference;
 
 import org.eclipse.xtext.scoping.Scopes;
 import java.util.ArrayList;
@@ -21,13 +23,19 @@ public class PlsqlScopeProvider extends AbstractPlsqlScopeProvider {
 		var column = findParentSelectColumn(context);
 		if (column != null) {
 			var select = (Select)column.eContainer();
-			var table = select.getTable();
-			if(table != null) {	
-				var allColumns = new ArrayList<Column>(table.getColumns());
-				return Scopes.scopeFor(allColumns);
-			} else {
-				return Scopes.scopeFor(new ArrayList<>());
-			}
+			var source = select.getSource();
+			if(source != null) {	
+				if(source instanceof TableReference) {
+					TableReference tableRef = (TableReference)source;
+					var allColumns = new ArrayList<Column>(tableRef.getTable().getColumns());
+					return Scopes.scopeFor(allColumns);
+				} else if(source instanceof Select) {
+					Select subSelect = (Select)source;
+					return Scopes.scopeFor(subSelect.getColumns());
+				} 
+				
+			} 
+			return Scopes.scopeFor(new ArrayList<>());
 		}
 		return super.getScope(context, reference);
 	}

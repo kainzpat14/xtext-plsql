@@ -18,9 +18,9 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Plsql.ecore#//AlterTable/table"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//AlterTable/columns"/>
     </genClasses>
-    <genClasses ecoreClass="Plsql.ecore#//Column">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//Column/name"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Column/type"/>
+    <genClasses ecoreClass="Plsql.ecore#//TableColumn">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//TableColumn/name"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//TableColumn/type"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//SqlType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//SqlType/size"/>
@@ -31,8 +31,13 @@
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//Select">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Select/columns"/>
-      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Plsql.ecore#//Select/table"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Select/source"/>
     </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//SelectSource"/>
+    <genClasses ecoreClass="Plsql.ecore#//TableReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Plsql.ecore#//TableReference/table"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//Subselect"/>
     <genClasses ecoreClass="Plsql.ecore#//SelectColumn"/>
     <genClasses ecoreClass="Plsql.ecore#//SelectExpression">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//SelectExpression/name"/>
@@ -40,6 +45,7 @@
     <genClasses ecoreClass="Plsql.ecore#//ColumnExpression">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Plsql.ecore#//ColumnExpression/column"/>
     </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//Column"/>
     <genClasses ecoreClass="Plsql.ecore#//StringExpression">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//StringExpression/text"/>
     </genClasses>
