@@ -42,8 +42,23 @@ NumberType:
 ;
 
 Select: 
-	'SELECT' columns+=[Column]
+	'SELECT' columns+=SelectColumn+
 	'FROM' table=[Table]
+;
+SelectColumn:
+	SelectExpression ('AS' name=ID)?
+;
+
+SelectExpression:
+	ColumnExpression | StringExpression
+;
+
+ColumnExpression:
+	column=[Column]
+;
+
+StringExpression:
+	text=STRING
 ;
 
 terminal ID: CASE_SENSITIVE_ID | CASE_INSENSITIVE_ID;

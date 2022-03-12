@@ -9,7 +9,7 @@ public class PlsqlValueConverterService extends DefaultTerminalConverters{
 
 	@Override
 	public Object toValue(String string, String lexerRule, INode node) throws ValueConverterException {
-		if(lexerRule.equals("ID")) {
+		if(lexerRule.equals("ID") || lexerRule.equals("sh.kainz.plsql.Plsql.ID")) {
 			if(string.startsWith("\"")) {
 				return string.substring(1,string.length()-1);
 			} else {

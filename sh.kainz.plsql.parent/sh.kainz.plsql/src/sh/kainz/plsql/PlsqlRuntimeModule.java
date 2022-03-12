@@ -18,6 +18,7 @@ import com.google.inject.name.Names;
 
 import sh.kainz.plsql.conversion.PlsqlValueConverterService;
 import sh.kainz.plsql.linking.CustomDelegateLinker;
+import sh.kainz.plsql.naming.PlsqlQualifiedNameProvider;
 import sh.kainz.plsql.parser.antlr.lexer.InternalPlsqlLexer;
 import sh.kainz.plsql.parser.antlr.lexer.PlsqlLexer;
 
@@ -52,6 +53,13 @@ public class PlsqlRuntimeModule extends AbstractPlsqlRuntimeModule {
 	public Class<? extends IValueConverterService> bindIValueConverterService() {
 		return PlsqlValueConverterService.class;
 	}
+
+	@Override
+	public Class<? extends IQualifiedNameProvider> bindIQualifiedNameProvider() {
+		return PlsqlQualifiedNameProvider.class;
+	}
+	
+	
 	
 	
 
