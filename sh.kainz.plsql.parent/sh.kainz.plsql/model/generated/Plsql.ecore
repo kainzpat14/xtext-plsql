@@ -28,7 +28,13 @@
   <eClassifiers xsi:type="ecore:EClass" name="NumberType" eSuperTypes="#//SqlType">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precision" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
-  <eClassifiers xsi:type="ecore:EClass" name="Select" eSuperTypes="#//Statement #//Subselect">
+  <eClassifiers xsi:type="ecore:EClass" name="Select" eSuperTypes="#//Statement"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Subquery" eSuperTypes="#//Select #//Subselect">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="forupdate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SetOperation" eSuperTypes="#//Subquery"/>
+  <eClassifiers xsi:type="ecore:EClass" name="AtomicSubquery" eSuperTypes="#//SetOperation"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Queryblock" eSuperTypes="#//AtomicSubquery">
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//SelectColumn" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//SelectSource"
@@ -49,5 +55,24 @@
   <eClassifiers xsi:type="ecore:EClass" name="Column"/>
   <eClassifiers xsi:type="ecore:EClass" name="StringExpression" eSuperTypes="#//SelectExpression">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="text" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Union" eSuperTypes="#//SetOperation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//AtomicSubquery"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="all" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Subquery"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Intersection" eSuperTypes="#//SetOperation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//AtomicSubquery"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Subquery"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SetSubstraction" eSuperTypes="#//SetOperation">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="left" eType="#//AtomicSubquery"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="right" eType="#//Subquery"
+        containment="true"/>
   </eClassifiers>
 </ecore:EPackage>

@@ -40,8 +40,29 @@ Varchar2Type:
 NumberType:
 	'NUMBER' '(' size=INT (',' precision=INT)? ')'
 ;
+//https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/select.html
+Select:
+	Subquery forupdate=('FOR UPDATE')?
+;
 
-Select: 
+//https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/subquery.html
+Subquery:
+	SetOperation | '(' Subquery ')' 
+;
+
+SetOperation:
+	AtomicSubquery (({Union.left=current} 'UNION' all='ALL'? | 
+			 {Intersection.left=current} 'INTERSECT' |
+			 {SetSubstraction.left=current} 'MINUS'
+			) right=Subquery)?
+;
+
+AtomicSubquery:
+	Queryblock 
+;
+
+//https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/query_block.html
+Queryblock: 
 	'SELECT' columns+=SelectColumn+
 	'FROM' source=SelectSource
 ;
@@ -55,7 +76,7 @@ TableReference:
 ;
 
 Subselect:
-	'(' Select ')'
+	'(' Subquery ')'
 ;
 
 SelectColumn:

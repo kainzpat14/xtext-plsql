@@ -29,9 +29,15 @@
     <genClasses ecoreClass="Plsql.ecore#//NumberType">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//NumberType/precision"/>
     </genClasses>
-    <genClasses ecoreClass="Plsql.ecore#//Select">
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Select/columns"/>
-      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Select/source"/>
+    <genClasses ecoreClass="Plsql.ecore#//Select"/>
+    <genClasses ecoreClass="Plsql.ecore#//Subquery">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//Subquery/forupdate"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//SetOperation"/>
+    <genClasses ecoreClass="Plsql.ecore#//AtomicSubquery"/>
+    <genClasses ecoreClass="Plsql.ecore#//Queryblock">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Queryblock/columns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Queryblock/source"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//SelectSource"/>
     <genClasses ecoreClass="Plsql.ecore#//TableReference">
@@ -48,6 +54,19 @@
     <genClasses ecoreClass="Plsql.ecore#//Column"/>
     <genClasses ecoreClass="Plsql.ecore#//StringExpression">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//StringExpression/text"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//Union">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Union/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//Union/all"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Union/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//Intersection">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Intersection/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Intersection/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//SetSubstraction">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SetSubstraction/left"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SetSubstraction/right"/>
     </genClasses>
   </genPackages>
 </genmodel:GenModel>
