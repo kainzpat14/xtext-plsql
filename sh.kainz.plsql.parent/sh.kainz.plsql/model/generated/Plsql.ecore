@@ -29,8 +29,56 @@
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="precision" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Select" eSuperTypes="#//Statement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Subquery" eSuperTypes="#//Select #//Subselect">
+  <eClassifiers xsi:type="ecore:EClass" name="TopLevelSubquery" eSuperTypes="#//Select">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="forupdate" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="Subquery" eSuperTypes="#//TopLevelSubquery #//Subselect">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderBy" eType="#//OrderBy"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rowLimiting" eType="#//RowLimiting"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sub" eType="#//TopLevelSubquery"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="RowLimiting">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="offset" eType="#//LimitingOffset"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="fetch" eType="#//LimitingFetch"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LimitingFetch">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="type" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="amount" eType="#//LimitingFetchAmount"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="rowType" eType="#//LimitingRowType"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="resolutionType" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LimitingFetchAmount"/>
+  <eClassifiers xsi:type="ecore:EClass" name="LimitingFetchCount" eSuperTypes="#//LimitingFetchAmount">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="count" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LimitingFetchPercent" eSuperTypes="#//LimitingFetchAmount">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="percent" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LimitingOffset">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="offset" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EInt"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="type" eType="#//LimitingRowType"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="LimitingRowType">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="row" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="rows" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderBy">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="siblings" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
+        eType="#//OrderByColumn" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderByColumn"/>
+  <eClassifiers xsi:type="ecore:EClass" name="OrderBySortationDirection">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="asc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="desc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SetOperation" eSuperTypes="#//Subquery"/>
   <eClassifiers xsi:type="ecore:EClass" name="AtomicSubquery" eSuperTypes="#//SetOperation"/>
@@ -45,7 +93,11 @@
     <eStructuralFeatures xsi:type="ecore:EReference" name="table" eType="#//Table"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Subselect" eSuperTypes="#//SelectSource"/>
-  <eClassifiers xsi:type="ecore:EClass" name="SelectColumn" eSuperTypes="#//Column"/>
+  <eClassifiers xsi:type="ecore:EClass" name="SelectColumn" eSuperTypes="#//OrderByColumn #//Column">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sorting" eType="#//OrderBySortationDirection"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nullDirection" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectExpression" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>

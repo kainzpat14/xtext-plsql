@@ -15,6 +15,7 @@ import sh.kainz.plsql.plsql.SetOperation;
 import sh.kainz.plsql.plsql.SetSubstraction;
 import sh.kainz.plsql.plsql.Subselect;
 import sh.kainz.plsql.plsql.TableReference;
+import sh.kainz.plsql.plsql.TopLevelSubquery;
 import sh.kainz.plsql.plsql.Union;
 
 import org.eclipse.xtext.scoping.Scopes;
@@ -23,6 +24,7 @@ import java.util.ArrayList;
 import sh.kainz.plsql.plsql.AtomicSubquery;
 import sh.kainz.plsql.plsql.Column;
 import sh.kainz.plsql.plsql.Intersection;
+import sh.kainz.plsql.plsql.OrderBy;
 
 
 public class PlsqlScopeProvider extends AbstractPlsqlScopeProvider {
@@ -30,7 +32,15 @@ public class PlsqlScopeProvider extends AbstractPlsqlScopeProvider {
 	public IScope getScope(EObject context, EReference reference) {
 		var column = findParentSelectColumn(context);
 		if (column != null) {
-			var select = (Select)column.eContainer();
+			Select select;
+			if(column.eContainer() instanceof Select) {
+				select = (Select)column.eContainer();
+			} else if(column.eContainer() instanceof OrderBy) {
+				var orderBy = (OrderBy)column.eContainer();
+				select = (Select)orderBy.eContainer();
+			} else {
+				throw new IllegalArgumentException("Unsupported class: "+column.eContainer().getClass().getName());
+			}
 			var source = findFirstQueryBlock(select).getSource();
 			if(source != null) {	
 				if(source instanceof TableReference) {

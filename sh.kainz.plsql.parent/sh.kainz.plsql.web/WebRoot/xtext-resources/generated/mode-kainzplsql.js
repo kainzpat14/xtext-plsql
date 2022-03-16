@@ -1,6 +1,6 @@
 define(["ace/lib/oop", "ace/mode/text", "ace/mode/text_highlight_rules"], function(oop, mText, mTextHighlightRules) {
 	var HighlightRules = function() {
-		var keywords = "ALL|ALTER|AS|CREATE|FROM|INTERSECT|MINUS|NUMBER|SELECT|TABLE|UNION|VARCHAR2";
+		var keywords = "ALL|ALTER|AS|ASC|BY|CREATE|DESC|FETCH|FIRST|FROM|INTERSECT|LAST|MINUS|NEXT|NULLS|NUMBER|OFFSET|ONLY|ORDER|PERCENT|ROW|ROWS|SELECT|SIBLINGS|TABLE|TIES|UNION|VARCHAR2|WITH";
 		this.$rules = {
 			"start": [
 				{token: "lparen", regex: "[(]"},

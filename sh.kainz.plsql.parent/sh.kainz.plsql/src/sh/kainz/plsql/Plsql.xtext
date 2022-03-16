@@ -10,7 +10,7 @@ Model:
 	statements+=Statement*;
 	
 Statement:
-	Table | AlterTable | Select
+	(Table | AlterTable | Select) ';'
 ;
 
 Table:
@@ -42,12 +42,96 @@ NumberType:
 ;
 //https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/select.html
 Select:
-	Subquery forupdate=('FOR UPDATE')?
+	TopLevelSubquery forupdate=FOR_UPDATE?
 ;
 
+
 //https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/subquery.html
+TopLevelSubquery:
+	Subquery orderBy=OrderBy? rowLimiting=RowLimiting
+;
+
 Subquery:
-	SetOperation | '(' Subquery ')' 
+	(SetOperation | '(' sub=TopLevelSubquery ')') 
+;
+
+// https://docs.oracle.com/database/121/SQLRF/statements_10002.htm#BABBADDD
+RowLimiting:
+	offset=LimitingOffset? fetch=LimitingFetch?
+;
+
+LimitingFetch:
+	'FETCH' type=LimitingFetchType amount=LimitingFetchAmount rowType=LimitingRowType resolutionType=LimitingResolutionType
+;
+
+LimitingResolutionType:
+	OnlyResolution | WithTiesResolution
+;
+
+OnlyResolution:
+	'ONLY'
+;
+
+WithTiesResolution:
+	'WITH' 'TIES'
+;
+
+LimitingFetchAmount:
+	LimitingFetchCount | LimitingFetchPercent
+;
+
+LimitingFetchCount:
+	count=INT
+;
+
+LimitingFetchPercent:
+	percent=INT 'PERCENT'
+;
+
+LimitingFetchType:
+	LimitingFetchFirst | LimitingFetchNext
+;
+
+LimitingFetchFirst:
+	'FIRST'
+;
+
+LimitingFetchNext:
+	'NEXT'
+;
+
+LimitingOffset:
+	'OFFSET' offset=INT type=LimitingRowType
+;
+
+LimitingRowType:
+	row='ROW' | rows='ROWS'
+;
+
+
+//https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/order_by_clause.html
+OrderBy: 
+	'ORDER' siblings='SIBLINGS'? 'BY' columns+=OrderByColumn+
+;
+
+OrderByColumn:
+	SelectColumn sorting=OrderBySortationDirection? nullDirection=OrderByNullDirection?
+;
+
+OrderBySortationDirection:
+	asc='ASC' | desc='DESC'
+;
+
+OrderByNullDirection:
+	OrderByDirectionNullsFirst | OrderByDirectionNullsLast
+;
+
+OrderByDirectionNullsFirst:
+	'NULLS' 'FIRST'
+;
+
+OrderByDirectionNullsLast:
+	'NULLS' 'LAST'
 ;
 
 SetOperation:
@@ -57,6 +141,7 @@ SetOperation:
 			) right=Subquery)?
 ;
 
+//used to get rid of left recursion
 AtomicSubquery:
 	Queryblock 
 ;
@@ -97,6 +182,10 @@ Column:
 
 StringExpression:
 	text=STRING
+;
+
+terminal FOR_UPDATE:
+	'FOR' 'UPDATE'
 ;
 
 terminal ID: CASE_SENSITIVE_ID | CASE_INSENSITIVE_ID;

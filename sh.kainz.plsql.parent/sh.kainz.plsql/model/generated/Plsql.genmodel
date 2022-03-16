@@ -30,8 +30,47 @@
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//NumberType/precision"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//Select"/>
+    <genClasses ecoreClass="Plsql.ecore#//TopLevelSubquery">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//TopLevelSubquery/forupdate"/>
+    </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//Subquery">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//Subquery/forupdate"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Subquery/orderBy"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Subquery/rowLimiting"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Subquery/sub"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//RowLimiting">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//RowLimiting/offset"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//RowLimiting/fetch"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//LimitingFetch">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//LimitingFetch/type"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//LimitingFetch/amount"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//LimitingFetch/rowType"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//LimitingFetch/resolutionType"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//LimitingFetchAmount"/>
+    <genClasses ecoreClass="Plsql.ecore#//LimitingFetchCount">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//LimitingFetchCount/count"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//LimitingFetchPercent">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//LimitingFetchPercent/percent"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//LimitingOffset">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//LimitingOffset/offset"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//LimitingOffset/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//LimitingRowType">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//LimitingRowType/row"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//LimitingRowType/rows"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//OrderBy">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//OrderBy/siblings"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//OrderBy/columns"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//OrderByColumn"/>
+    <genClasses ecoreClass="Plsql.ecore#//OrderBySortationDirection">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//OrderBySortationDirection/asc"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//OrderBySortationDirection/desc"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//SetOperation"/>
     <genClasses ecoreClass="Plsql.ecore#//AtomicSubquery"/>
@@ -44,7 +83,10 @@
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Plsql.ecore#//TableReference/table"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//Subselect"/>
-    <genClasses ecoreClass="Plsql.ecore#//SelectColumn"/>
+    <genClasses ecoreClass="Plsql.ecore#//SelectColumn">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SelectColumn/sorting"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//SelectColumn/nullDirection"/>
+    </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//SelectExpression">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//SelectExpression/name"/>
     </genClasses>
