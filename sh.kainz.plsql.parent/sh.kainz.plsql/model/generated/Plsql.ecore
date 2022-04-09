@@ -6,8 +6,7 @@
         eType="#//Statement" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Statement"/>
-  <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="#//Statement">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Table" eSuperTypes="#//Statement #//TableLike">
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//Column" containment="true"/>
   </eClassifiers>
@@ -76,27 +75,71 @@
         eType="#//OrderByColumn" containment="true"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="OrderByColumn"/>
-  <eClassifiers xsi:type="ecore:EClass" name="OrderBySortationDirection">
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="asc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="desc" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  <eClassifiers xsi:type="ecore:EClass" name="Ordering">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="sorting" eType="#//OrderBySortationDirection"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nullDirection" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="OrderBySortationDirection">
+    <eLiterals name="asc" literal="ASC"/>
+    <eLiterals name="desc" value="1" literal="DESC"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SetOperation" eSuperTypes="#//Subquery"/>
   <eClassifiers xsi:type="ecore:EClass" name="AtomicSubquery" eSuperTypes="#//SetOperation"/>
   <eClassifiers xsi:type="ecore:EClass" name="Queryblock" eSuperTypes="#//AtomicSubquery">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="withDefinition" eType="#//WithDefinition"
+        containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
         eType="#//SelectColumn" containment="true"/>
     <eStructuralFeatures xsi:type="ecore:EReference" name="source" eType="#//SelectSource"
         containment="true"/>
   </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="WithDefinition">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="subqueries" upperBound="-1"
+        eType="#//SubqueryFactoring" containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SubqueryFactoring" eSuperTypes="#//TableLike">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="aliases" unique="false"
+        upperBound="-1" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="query" eType="#//TopLevelSubquery"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="search" eType="#//SearchClause"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="cycle" eType="#//CycleClause"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="CycleClause">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="columns" upperBound="-1"
+        eType="#//ColumnExpression" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="cycleMarkAlias" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SearchClause">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="searchType" eType="#//SearchType"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="searchColumns" upperBound="-1"
+        eType="#//SearchColumn" containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="orderingColumn" eType="#//ColumnExpression"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="SearchColumn">
+    <eStructuralFeatures xsi:type="ecore:EReference" name="column" eType="#//ColumnExpression"
+        containment="true"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sorting" eType="#//Ordering"
+        containment="true"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EEnum" name="SearchType">
+    <eLiterals name="depth" literal="DEPTH"/>
+    <eLiterals name="width" value="1" literal="WIDTH"/>
+  </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectSource"/>
   <eClassifiers xsi:type="ecore:EClass" name="TableReference" eSuperTypes="#//SelectSource">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="table" eType="#//Table"/>
+    <eStructuralFeatures xsi:type="ecore:EReference" name="table" eType="#//TableLike"/>
+  </eClassifiers>
+  <eClassifiers xsi:type="ecore:EClass" name="TableLike">
+    <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="Subselect" eSuperTypes="#//SelectSource"/>
   <eClassifiers xsi:type="ecore:EClass" name="SelectColumn" eSuperTypes="#//OrderByColumn #//Column">
-    <eStructuralFeatures xsi:type="ecore:EReference" name="sorting" eType="#//OrderBySortationDirection"
+    <eStructuralFeatures xsi:type="ecore:EReference" name="sorting" eType="#//Ordering"
         containment="true"/>
-    <eStructuralFeatures xsi:type="ecore:EAttribute" name="nullDirection" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>
   </eClassifiers>
   <eClassifiers xsi:type="ecore:EClass" name="SelectExpression" eSuperTypes="#//SelectColumn">
     <eStructuralFeatures xsi:type="ecore:EAttribute" name="name" eType="ecore:EDataType http://www.eclipse.org/emf/2002/Ecore#//EString"/>

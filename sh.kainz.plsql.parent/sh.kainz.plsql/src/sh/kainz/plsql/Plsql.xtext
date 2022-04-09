@@ -48,7 +48,7 @@ Select:
 
 //https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/subquery.html
 TopLevelSubquery:
-	Subquery orderBy=OrderBy? rowLimiting=RowLimiting
+	Subquery orderBy=OrderBy? rowLimiting=RowLimiting?
 ;
 
 Subquery:
@@ -57,7 +57,7 @@ Subquery:
 
 // https://docs.oracle.com/database/121/SQLRF/statements_10002.htm#BABBADDD
 RowLimiting:
-	offset=LimitingOffset? fetch=LimitingFetch?
+	offset=LimitingOffset | offset=LimitingOffset fetch=LimitingFetch | fetch=LimitingFetch
 ;
 
 LimitingFetch:
@@ -115,10 +115,14 @@ OrderBy:
 ;
 
 OrderByColumn:
-	SelectColumn sorting=OrderBySortationDirection? nullDirection=OrderByNullDirection?
+	SelectColumn sorting=Ordering?
 ;
 
-OrderBySortationDirection:
+Ordering: 
+	sorting=OrderBySortationDirection | sorting=OrderBySortationDirection nullDirection=OrderByNullDirection | nullDirection=OrderByNullDirection
+;
+
+enum OrderBySortationDirection:
 	asc='ASC' | desc='DESC'
 ;
 
@@ -148,8 +152,36 @@ AtomicSubquery:
 
 //https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/query_block.html
 Queryblock: 
+	withDefinition = WithDefinition?
 	'SELECT' columns+=SelectColumn+
 	'FROM' source=SelectSource
+;
+
+//https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/SELECT.html#GUID-CFA006CA-6FF1-4972-821E-6996142A51C6__BABFAFID
+WithDefinition:
+	'WITH' /*TODO: plsql_declarations */ subqueries+=SubqueryFactoring /*TODO: ? */ /* TODO: SubAVFactoring */ (',' subqueries+=SubqueryFactoring)*
+;
+
+//https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/subquery_factoring_clause.html
+SubqueryFactoring:
+	 name=ID ('(' aliases+=ID (',' aliases+=ID)* ')')? 'AS' '(' query=TopLevelSubquery ')' search=SearchClause? cycle=CycleClause?
+;
+
+CycleClause:
+	'CYCLE' columns+=ColumnExpression (',' columns+=ColumnExpression)* 'SET' cycleMarkAlias=ID 'TO' INT 'DEFAULT' INT
+;
+
+SearchClause:
+	'SEARCH' searchType=SearchType 'FIRST' 'BY' searchColumns+=SearchColumn (',' searchColumns+=SearchColumn)* 'SET' orderingColumn=ColumnExpression 
+;
+
+SearchColumn:
+	column=ColumnExpression sorting=Ordering? 
+;
+
+enum SearchType:
+	depth='DEPTH' | 
+	width='WIDTH'
 ;
 
 SelectSource:
@@ -157,7 +189,11 @@ SelectSource:
 ;
 
 TableReference: 
-	table=[Table]
+	table=[TableLike]
+;
+
+TableLike: 
+	Table | SubqueryFactoring
 ;
 
 Subselect:

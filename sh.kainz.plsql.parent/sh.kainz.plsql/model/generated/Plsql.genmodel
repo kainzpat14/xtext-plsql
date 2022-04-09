@@ -6,12 +6,19 @@
     copyrightFields="false" runtimeVersion="2.20">
   <genPackages prefix="Plsql" basePackage="sh.kainz.plsql" disposableProviderFactory="true"
       fileExtensions="kainzplsql" ecorePackage="Plsql.ecore#/">
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Plsql.ecore#//OrderBySortationDirection">
+      <genEnumLiterals ecoreEnumLiteral="Plsql.ecore#//OrderBySortationDirection/asc"/>
+      <genEnumLiterals ecoreEnumLiteral="Plsql.ecore#//OrderBySortationDirection/desc"/>
+    </genEnums>
+    <genEnums typeSafeEnumCompatible="false" ecoreEnum="Plsql.ecore#//SearchType">
+      <genEnumLiterals ecoreEnumLiteral="Plsql.ecore#//SearchType/depth"/>
+      <genEnumLiterals ecoreEnumLiteral="Plsql.ecore#//SearchType/width"/>
+    </genEnums>
     <genClasses ecoreClass="Plsql.ecore#//Model">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Model/statements"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//Statement"/>
     <genClasses ecoreClass="Plsql.ecore#//Table">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//Table/name"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Table/columns"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//AlterTable">
@@ -68,24 +75,49 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//OrderBy/columns"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//OrderByColumn"/>
-    <genClasses ecoreClass="Plsql.ecore#//OrderBySortationDirection">
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//OrderBySortationDirection/asc"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//OrderBySortationDirection/desc"/>
+    <genClasses ecoreClass="Plsql.ecore#//Ordering">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//Ordering/sorting"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//Ordering/nullDirection"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//SetOperation"/>
     <genClasses ecoreClass="Plsql.ecore#//AtomicSubquery"/>
     <genClasses ecoreClass="Plsql.ecore#//Queryblock">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Queryblock/withDefinition"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Queryblock/columns"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Queryblock/source"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//WithDefinition">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//WithDefinition/subqueries"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//SubqueryFactoring">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//SubqueryFactoring/aliases"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SubqueryFactoring/query"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SubqueryFactoring/search"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SubqueryFactoring/cycle"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//CycleClause">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//CycleClause/columns"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//CycleClause/cycleMarkAlias"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//SearchClause">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//SearchClause/searchType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SearchClause/searchColumns"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SearchClause/orderingColumn"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//SearchColumn">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SearchColumn/column"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SearchColumn/sorting"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//SelectSource"/>
     <genClasses ecoreClass="Plsql.ecore#//TableReference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Plsql.ecore#//TableReference/table"/>
     </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//TableLike">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//TableLike/name"/>
+    </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//Subselect"/>
     <genClasses ecoreClass="Plsql.ecore#//SelectColumn">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SelectColumn/sorting"/>
-      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//SelectColumn/nullDirection"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//SelectExpression">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//SelectExpression/name"/>
