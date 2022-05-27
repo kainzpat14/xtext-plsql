@@ -15,7 +15,7 @@ Statement:
 
 Table:
 	'CREATE' 'TABLE' name=ID '('
-		columns+= Column+
+		columns+= TableColumn+
 	')'
 ;
 
@@ -24,7 +24,7 @@ Table:
 
 TableDefinition: 
 	'CREATE' 'TABLE' 'INTERFACE' name=ID '@' remote=Remote '('
-		columns+= Column+
+		columns+= TableColumn+
 	')'
 ;
 
@@ -167,7 +167,7 @@ AtomicSubquery:
 Queryblock: 
 	withDefinition = WithDefinition?
 	'SELECT' (all='ALL' | (distinct='DISTINCT' | unique='UNQIUE'))? columns+=SelectColumn+
-	'FROM' source=SelectSource
+	'FROM' source=SelectSources
 ;
 
 //https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/SELECT.html#GUID-CFA006CA-6FF1-4972-821E-6996142A51C6__BABFAFID
@@ -198,8 +198,57 @@ enum SearchType:
 ;
 
 // TODO: Table collection expression
+SelectSources:
+	first=SelectSource join=(Join)?
+;
+// Source: https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/SELECT.html#GUID-CFA006CA-6FF1-4972-821E-6996142A51C6
+Join:
+	(CrossJoin | ConditionalJoin) join=(Join)?
+;
+
+CrossJoin:
+	type=CrossJoinType next=SelectSource
+;
+
+ConditionalJoin:
+	joinType=ConditionalJoinType next=SelectSource condition=JoinCondition
+;
+
+JoinCondition:
+	OnCondition | UsingCondition
+;
+
+OnCondition:
+	{OnCondition} 'ON' 'TODO' //TODO: expression language
+;
+
+UsingCondition:
+	'USING' '(' SelectColumn ')'
+;
+
+ConditionalJoinType:
+	InnerJoin | OuterJoin
+;
+
+CrossJoinType:
+	'CROSS' 'JOIN' | ',' | 'NATURAL' 'INNER'? 'JOIN'
+;
+
+InnerJoin:
+	{InnerJoin} 'INNER' 'JOIN'
+;
+
+OuterJoin:
+	{OuterJoin} direction=JoinDirection? 'OUTER' 'JOIN'
+;
+
+JoinDirection:
+	left = 'LEFT' | right = 'RIGHT'
+;
+
+
 SelectSource:
-	TableReference | Subselect | RemoteTableReference
+	(TableReference | Subselect | RemoteTableReference) ('AS'? name=ID)?
 ;
 
 TableReference: 
@@ -227,7 +276,7 @@ SelectExpression:
 ;
 
 ColumnExpression:
-	column=[Column]
+	column=[Column | QualifiedName]
 ;
 
 Column:
@@ -236,6 +285,10 @@ Column:
 
 StringExpression:
 	text=STRING
+;
+
+QualifiedName: 
+	ID ('.' ID)*
 ;
 
 terminal FOR_UPDATE:

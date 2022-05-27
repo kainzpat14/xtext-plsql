@@ -116,7 +116,36 @@
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SearchColumn/column"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SearchColumn/sorting"/>
     </genClasses>
-    <genClasses ecoreClass="Plsql.ecore#//SelectSource"/>
+    <genClasses ecoreClass="Plsql.ecore#//SelectSources">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SelectSources/first"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//SelectSources/join"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//Join">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Join/join"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Join/next"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//CrossJoin">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//CrossJoin/type"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//ConditionalJoin">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//ConditionalJoin/joinType"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//ConditionalJoin/condition"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//JoinCondition"/>
+    <genClasses ecoreClass="Plsql.ecore#//OnCondition"/>
+    <genClasses ecoreClass="Plsql.ecore#//UsingCondition"/>
+    <genClasses ecoreClass="Plsql.ecore#//ConditionalJoinType"/>
+    <genClasses ecoreClass="Plsql.ecore#//InnerJoin"/>
+    <genClasses ecoreClass="Plsql.ecore#//OuterJoin">
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//OuterJoin/direction"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//JoinDirection">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//JoinDirection/left"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//JoinDirection/right"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//SelectSource">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//SelectSource/name"/>
+    </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//TableReference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Plsql.ecore#//TableReference/table"/>
     </genClasses>

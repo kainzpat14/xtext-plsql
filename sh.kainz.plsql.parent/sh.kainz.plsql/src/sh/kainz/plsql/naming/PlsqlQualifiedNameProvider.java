@@ -29,6 +29,7 @@ public class PlsqlQualifiedNameProvider extends DefaultDeclarativeQualifiedNameP
 				try {
 					String name = resolverDelegate.apply(expression.getColumn());
 					expression.setName(name);
+					System.out.println("Resolved: "+name+" for "+expression.getColumn());
 					return name;
 				}
 				finally {

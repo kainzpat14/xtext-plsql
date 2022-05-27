@@ -9,6 +9,8 @@ import org.eclipse.xtext.naming.QualifiedName;
 import org.eclipse.xtext.resource.EObjectDescription;
 import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
+import org.eclipse.xtext.scoping.IScopeProvider;
+
 import sh.kainz.plsql.plsql.PlsqlPackage;
 import sh.kainz.plsql.plsql.Queryblock;
 import sh.kainz.plsql.plsql.RemoteTableReference;
@@ -26,24 +28,35 @@ import sh.kainz.plsql.plsql.TableReference;
 import sh.kainz.plsql.plsql.TopLevelSubquery;
 import sh.kainz.plsql.plsql.Union;
 import sh.kainz.plsql.plsql.impl.SubqueryImpl;
+import sh.kainz.plsql.scoping.select.ISelectScopeProvider;
 
 import org.eclipse.xtext.scoping.Scopes;
+import org.eclipse.xtext.scoping.impl.AbstractDeclarativeScopeProvider;
+
+import com.google.inject.Inject;
+import com.google.inject.name.Named;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
 import sh.kainz.plsql.plsql.AtomicSubquery;
 import sh.kainz.plsql.plsql.Column;
+import sh.kainz.plsql.plsql.ConditionalJoin;
 import sh.kainz.plsql.plsql.Intersection;
+import sh.kainz.plsql.plsql.Join;
 import sh.kainz.plsql.plsql.OrderBy;
 
 
 public class PlsqlScopeProvider extends AbstractPlsqlScopeProvider {
+	@Inject
+	private ISelectScopeProvider selectScope;
+	
 	@Override
 	public IScope getScope(EObject context, EReference reference) {
 		var column = findParentSelectColumn(context);
-		if (column != null) {
-			return lookupSelectColumn(column);
+		if (column != null || SelectColumn.class.isAssignableFrom(reference.getContainerClass())) {
+			return lookupSelectColumn(column!=null?column:context);
 		}
 		if(context instanceof TableReference) {
 			var result = new ArrayList<EObject>();
@@ -82,69 +95,27 @@ public class PlsqlScopeProvider extends AbstractPlsqlScopeProvider {
 		}
 	}
 
-	private IScope lookupSelectColumn(SelectColumn column) {
+	private IScope lookupSelectColumn(EObject column) {
 		Select select;
 		if(column.eContainer() instanceof Select) {
 			select = (Select)column.eContainer();
 		} else if(column.eContainer() instanceof OrderBy) {
 			var orderBy = (OrderBy)column.eContainer();
 			select = (Select)orderBy.eContainer();
-		} else {
-			throw new IllegalArgumentException("Unsupported class: "+column.eContainer().getClass().getName());
-		}
-		var source = findFirstQueryBlock(select).getSource();
-		if(source != null) {	
-			if(source instanceof TableReference) {
-				TableReference tableRef = (TableReference)source;
-				if(tableRef.getTable() instanceof Table) {
-					var allColumns = new ArrayList<Column>(((Table)tableRef.getTable()).getColumns());
-					return Scopes.scopeFor(allColumns);
-				} else if(tableRef.getTable() instanceof SubqueryFactoring){
-					var subquery = (SubqueryFactoring) tableRef.getTable();
-					var innerQuery = findFirstQueryBlock(subquery.getQuery());
-					if(!subquery.getAliases().isEmpty()) {
-						return Scopes.scopeFor(innerQuery.getColumns(),col -> findColumnName(col, innerQuery.getColumns(),subquery.getAliases()),Scopes.scopeFor(new ArrayList<>()));
-					} else {
-						return Scopes.scopeFor(innerQuery.getColumns());
-					}
-				} 
-			} else if(source instanceof Select) {
-				Select subSelect = (Select)source;
-				return Scopes.scopeFor(findFirstQueryBlock(subSelect).getColumns());
-			} else if(source instanceof RemoteTableReference) {
-				RemoteTableReference tableRef = (RemoteTableReference)source;
-				if(tableRef.getTable() instanceof TableDefinition) {
-					var allColumns = new ArrayList<Column>(((TableDefinition)tableRef.getTable()).getColumns());
-					return Scopes.scopeFor(allColumns);
-				}
-			}
-			
 		} 
-		return Scopes.scopeFor(new ArrayList<>());
+		else {
+			select = findNextSelect(column);
+		}
+		return selectScope.findScope(select);
 	}
 
-	private QualifiedName findColumnName(SelectColumn column, List<SelectColumn> columns, List<String> aliases) {
-		int index = columns.indexOf(column);
-		if(index<aliases.size()) {
-			return QualifiedName.create(aliases.get(index));
+	private Select findNextSelect(EObject eContainer) {
+		if(eContainer == null) {
+			throw new IllegalArgumentException("Cannot find select in path");
+		} else if(eContainer instanceof Select) {
+			return (Select) eContainer;
 		} else {
-			return null;
-		}
-	}
-	
-	private Queryblock findFirstQueryBlock(Select select) {
-		if(select instanceof Union) {
-			return (Queryblock)((Union)select).getLeft();
-		} else if(select instanceof Intersection) {
-			return (Queryblock)((Intersection)select).getLeft();
-		} else if(select instanceof SetSubstraction) {
-			return (Queryblock)((SetSubstraction)select).getLeft();
-		} else if(select instanceof Queryblock) {
-			return (Queryblock)select;
-		} else if(select instanceof Subquery) {
-			return findFirstQueryBlock(((Subquery)select).getSub());
-		}else {
-			throw new IllegalArgumentException("Unsupported type: "+select.getClass().getName());
+			return findNextSelect(eContainer.eContainer());
 		}
 	}
 

@@ -21,6 +21,8 @@ import sh.kainz.plsql.linking.CustomDelegateLinker;
 import sh.kainz.plsql.naming.PlsqlQualifiedNameProvider;
 import sh.kainz.plsql.parser.antlr.lexer.InternalPlsqlLexer;
 import sh.kainz.plsql.parser.antlr.lexer.PlsqlLexer;
+import sh.kainz.plsql.scoping.select.ISelectScopeProvider;
+import sh.kainz.plsql.scoping.select.SelectScopeProvider;
 
 /**
  * Use this class to register components to be used at runtime / without the Equinox extension registry.
@@ -37,6 +39,10 @@ public class PlsqlRuntimeModule extends AbstractPlsqlRuntimeModule {
 		return PlsqlLexer.class;
 	}
 
+	public Class<? extends ISelectScopeProvider> bindSelectScopeProvider() {
+		return SelectScopeProvider.class;
+	}
+	
 	@Override
 	public Provider<? extends InternalPlsqlLexer> provideInternalPlsqlLexer() {
 		return LexerProvider.create(PlsqlLexer.class);
