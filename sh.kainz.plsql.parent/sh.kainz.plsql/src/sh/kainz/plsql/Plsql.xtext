@@ -10,13 +10,26 @@ Model:
 	statements+=Statement*;
 	
 Statement:
-	(Table | AlterTable | Select) ';'
+	(Table | AlterTable | Select | TableDefinition) ';'
 ;
 
 Table:
 	'CREATE' 'TABLE' name=ID '('
 		columns+= Column+
 	')'
+;
+
+//This is basically a hack, we will not be able to access other tables over db links, but we still need to type
+// data, so this will provide us with it
+
+TableDefinition: 
+	'CREATE' 'TABLE' 'INTERFACE' name=ID '@' remote=Remote '('
+		columns+= Column+
+	')'
+;
+
+Remote:
+	ID ('.' ID)*
 ;
 
 AlterTable: 
@@ -153,7 +166,7 @@ AtomicSubquery:
 //https://docs.oracle.com/en/database/oracle/oracle-database/19/sqlrf/img_text/query_block.html
 Queryblock: 
 	withDefinition = WithDefinition?
-	'SELECT' columns+=SelectColumn+
+	'SELECT' (all='ALL' | (distinct='DISTINCT' | unique='UNQIUE'))? columns+=SelectColumn+
 	'FROM' source=SelectSource
 ;
 
@@ -184,12 +197,17 @@ enum SearchType:
 	width='WIDTH'
 ;
 
+// TODO: Table collection expression
 SelectSource:
-	TableReference | Subselect
+	TableReference | Subselect | RemoteTableReference
 ;
 
 TableReference: 
 	table=[TableLike]
+;
+
+RemoteTableReference:
+	table=[TableDefinition] '@' remote=Remote
 ;
 
 TableLike: 

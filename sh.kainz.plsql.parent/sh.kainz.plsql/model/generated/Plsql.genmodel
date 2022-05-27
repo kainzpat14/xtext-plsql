@@ -21,6 +21,11 @@
     <genClasses ecoreClass="Plsql.ecore#//Table">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Table/columns"/>
     </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//TableDefinition">
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//TableDefinition/name"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//TableDefinition/remote"/>
+      <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//TableDefinition/columns"/>
+    </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//AlterTable">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Plsql.ecore#//AlterTable/table"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//AlterTable/columns"/>
@@ -83,6 +88,9 @@
     <genClasses ecoreClass="Plsql.ecore#//AtomicSubquery"/>
     <genClasses ecoreClass="Plsql.ecore#//Queryblock">
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Queryblock/withDefinition"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//Queryblock/all"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//Queryblock/distinct"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//Queryblock/unique"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Queryblock/columns"/>
       <genFeatures property="None" children="true" createChild="true" ecoreFeature="ecore:EReference Plsql.ecore#//Queryblock/source"/>
     </genClasses>
@@ -111,6 +119,10 @@
     <genClasses ecoreClass="Plsql.ecore#//SelectSource"/>
     <genClasses ecoreClass="Plsql.ecore#//TableReference">
       <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Plsql.ecore#//TableReference/table"/>
+    </genClasses>
+    <genClasses ecoreClass="Plsql.ecore#//RemoteTableReference">
+      <genFeatures notify="false" createChild="false" propertySortChoices="true" ecoreFeature="ecore:EReference Plsql.ecore#//RemoteTableReference/table"/>
+      <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//RemoteTableReference/remote"/>
     </genClasses>
     <genClasses ecoreClass="Plsql.ecore#//TableLike">
       <genFeatures createChild="false" ecoreFeature="ecore:EAttribute Plsql.ecore#//TableLike/name"/>

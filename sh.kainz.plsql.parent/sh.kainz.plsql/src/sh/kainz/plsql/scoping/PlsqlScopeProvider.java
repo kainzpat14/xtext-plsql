@@ -6,9 +6,12 @@ package sh.kainz.plsql.scoping;
 import org.eclipse.emf.ecore.EObject;
 import org.eclipse.emf.ecore.EReference;
 import org.eclipse.xtext.naming.QualifiedName;
+import org.eclipse.xtext.resource.EObjectDescription;
+import org.eclipse.xtext.resource.IEObjectDescription;
 import org.eclipse.xtext.scoping.IScope;
 import sh.kainz.plsql.plsql.PlsqlPackage;
 import sh.kainz.plsql.plsql.Queryblock;
+import sh.kainz.plsql.plsql.RemoteTableReference;
 import sh.kainz.plsql.plsql.Select;
 import sh.kainz.plsql.plsql.SelectColumn;
 import sh.kainz.plsql.plsql.SelectSource;
@@ -18,6 +21,7 @@ import sh.kainz.plsql.plsql.Subquery;
 import sh.kainz.plsql.plsql.SubqueryFactoring;
 import sh.kainz.plsql.plsql.Subselect;
 import sh.kainz.plsql.plsql.Table;
+import sh.kainz.plsql.plsql.TableDefinition;
 import sh.kainz.plsql.plsql.TableReference;
 import sh.kainz.plsql.plsql.TopLevelSubquery;
 import sh.kainz.plsql.plsql.Union;
@@ -45,6 +49,23 @@ public class PlsqlScopeProvider extends AbstractPlsqlScopeProvider {
 			var result = new ArrayList<EObject>();
 			appendWithObjects(result, context);
 			return Scopes.scopeFor(result,super.getScope(context, reference));
+		}
+		if(context instanceof RemoteTableReference) {
+			RemoteTableReference ref = (RemoteTableReference)context;
+			var result = new ArrayList<EObject>();
+			var scope = super.getScope(context, reference);
+			scope.getAllElements().forEach(it -> {
+				IEObjectDescription desc = it;
+				var obj = desc.getEObjectOrProxy();
+				if(obj instanceof TableDefinition) {
+					var def = (TableDefinition)obj;
+					if(ref.getRemote().equals(def.getRemote())) {
+						result.add(def);
+					}
+				}
+			});
+			
+			return Scopes.scopeFor(result);
 		}
 		return super.getScope(context, reference);
 	}
@@ -90,7 +111,13 @@ public class PlsqlScopeProvider extends AbstractPlsqlScopeProvider {
 			} else if(source instanceof Select) {
 				Select subSelect = (Select)source;
 				return Scopes.scopeFor(findFirstQueryBlock(subSelect).getColumns());
-			} 
+			} else if(source instanceof RemoteTableReference) {
+				RemoteTableReference tableRef = (RemoteTableReference)source;
+				if(tableRef.getTable() instanceof TableDefinition) {
+					var allColumns = new ArrayList<Column>(((TableDefinition)tableRef.getTable()).getColumns());
+					return Scopes.scopeFor(allColumns);
+				}
+			}
 			
 		} 
 		return Scopes.scopeFor(new ArrayList<>());
